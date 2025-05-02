@@ -1,6 +1,8 @@
 'use client'
+
 import React, { useState, useRef, useEffect } from "react";
 import { UserCircle } from "lucide-react";
+import AnimatedNavbar from "../components/navbar";
 
 // CardContainer with 3D effect logic
 const CardContainer = ({ children }) => {
@@ -68,7 +70,7 @@ const CardItem = ({ children, translateZ = 0, className = "", ...rest }) => {
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white">
-      {/* Navbar */}
+      
       <nav className="flex justify-between items-center px-6 py-4 bg-white/5 backdrop-blur-md shadow-md border-b border-white/10">
         {/* Logo */}
         <div className="text-2xl font-bold text-cyan-300">NextQ</div>
@@ -77,6 +79,7 @@ export default function HomePage() {
         <div className="flex gap-6 text-gray-200 font-medium">
           <a href="#" className="hover:text-cyan-400 transition">Home</a>
           <a href="#" className="hover:text-cyan-400 transition">Predictive QP</a>
+          <a href="#" className="hover:text-cyan-400 transition">Summarize Notes</a>
           <a href="#" className="hover:text-cyan-400 transition">Customize QP</a>
         </div>
 
@@ -147,6 +150,7 @@ export default function HomePage() {
           </CardContainer>
         </div>
       </main>
+     <AnimatedNavbar/>
     </div>
   );
 }
