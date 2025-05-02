@@ -3,9 +3,8 @@ import { useState } from 'react';
 import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
 
-export default function NextQLandingPage() {
+export default function Home() {
   const [showLogin, setShowLogin] = useState(false);
-
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-100 to-purple-200 flex flex-col items-center justify-center p-6 overflow-hidden">
       {/* Blur overlay */}
