@@ -5,17 +5,18 @@ import { DocumentArrowUpIcon } from "@heroicons/react/24/outline";
 import { UserCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
-
 export default function DocumentSummarizer() {
   const [summary, setSummary] = useState("");
   const [dragActive, setDragActive] = useState(false);
+  const [fileUploaded, setFileUploaded] = useState(false);
+  const [difficulty, setDifficulty] = useState("");
   const fileInputRef = useRef();
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Simulate summarization logic
-      setSummary("This is a summarized version of the uploaded document.");
+      setFileUploaded(true);
+      setSummary(""); // Reset previous summary if any
     }
   };
 
@@ -36,27 +37,35 @@ export default function DocumentSummarizer() {
     setDragActive(false);
   };
 
+  const generateSummary = () => {
+    // Simulate different summaries based on difficulty
+    const summaries = {
+      easy: "This is a very simple summary highlighting the basic points.",
+      medium: "This summary provides a balanced overview of key concepts and insights.",
+      hard: "This is a detailed and analytical summary, capturing nuanced elements of the content.",
+    };
+    setSummary(summaries[difficulty]);
+  };
+
   const downloadPDF = () => {
     const blob = new Blob([summary], { type: "application/pdf" });
-    saveAs(blob, "summary.pdf");
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "summary.pdf";
+    link.click();
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white">
       {/* Navbar */}
       <nav className="flex justify-between items-center px-6 py-4 bg-white/5 backdrop-blur-md shadow-md border-b border-white/10">
-        {/* Logo */}
         <div className="text-2xl font-bold text-cyan-300">NextQ</div>
-
-        {/* Nav Links */}
         <div className="hidden md:flex gap-6 text-gray-200 font-medium">
           <a href="#" className="hover:text-cyan-400 transition">Home</a>
           <a href="#" className="hover:text-cyan-400 transition">Predictive QP</a>
           <a href="#" className="hover:text-cyan-400 transition">Summarize Notes</a>
           <a href="#" className="hover:text-cyan-400 transition">Customize QP</a>
         </div>
-
-        {/* User Icon */}
         <div className="flex items-center gap-2">
           <UserCircle className="w-8 h-8 text-cyan-300" />
         </div>
@@ -81,6 +90,34 @@ export default function DocumentSummarizer() {
             onChange={handleFileUpload}
           />
         </motion.div>
+
+        {/* Difficulty Level */}
+        {fileUploaded && !summary && (
+          <div className="mt-8 text-center">
+            <label className="text-lg font-semibold text-gray-200">Select Difficulty Level</label>
+            <div className="flex justify-center gap-6 mt-4">
+              {["easy", "medium", "hard"].map((level) => (
+                <label key={level} className="flex items-center gap-2 text-gray-300">
+                  <input
+                    type="radio"
+                    name="difficulty"
+                    value={level}
+                    checked={difficulty === level}
+                    onChange={(e) => setDifficulty(e.target.value)}
+                  />
+                  {level.charAt(0).toUpperCase() + level.slice(1)}
+                </label>
+              ))}
+            </div>
+            <button
+              onClick={generateSummary}
+              className={`px-6 py-2 mt-6 rounded text-white ${difficulty ? "bg-cyan-600 hover:bg-cyan-500" : "bg-gray-500 cursor-not-allowed"}`}
+              disabled={!difficulty}
+            >
+              Generate Summary
+            </button>
+          </div>
+        )}
 
         {/* Summary Output */}
         {summary && (
