@@ -1,6 +1,12 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { UserCircleIcon, XMarkIcon, PlusIcon, PrinterIcon, ArrowDownTrayIcon } from '@heroicons/react/24/solid'; // Use ArrowDownTrayIcon for download
+import {
+  UserCircleIcon,
+  XMarkIcon,
+  PlusIcon,
+  PrinterIcon,
+  ArrowDownTrayIcon
+} from '@heroicons/react/24/solid';
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import html2pdf from 'html2pdf.js';
 
@@ -22,7 +28,9 @@ export default function CustomizeQP() {
   const updateBlock = (id, newContent, color, alignment, fontSize) => {
     setBlocks(
       blocks.map((block) =>
-        block.id === id ? { ...block, content: newContent, color: color || block.color, alignment: alignment || block.alignment, fontSize: fontSize || block.fontSize } : block
+        block.id === id
+          ? { ...block, content: newContent, color, alignment, fontSize }
+          : block
       )
     );
   };
@@ -35,27 +43,16 @@ export default function CustomizeQP() {
     );
   };
 
-  const applyStyle = (id, style) => {
-    const selectedText = document.getElementById(`block-${id}`);
-    if (selectedText) {
-      document.execCommand(style, false, null); // Apply the text style (e.g., bold, italic, etc.)
-    }
+  const applyStyle = (command) => {
+    document.execCommand(command, false, null);
   };
 
   const handleAlignment = (id, alignment) => {
-    const selectedText = document.getElementById(`block-${id}`);
-    if (selectedText) {
-      selectedText.style.textAlign = alignment; // Set alignment style
-    }
-    updateBlock(id, blocks.find((block) => block.id === id).content, blocks.find((block) => block.id === id).color, alignment, blocks.find((block) => block.id === id).fontSize);
+    updateBlock(id, blocks.find(b => b.id === id).content, blocks.find(b => b.id === id).color, alignment, blocks.find(b => b.id === id).fontSize);
   };
 
   const handleFontSizeChange = (id, fontSize) => {
-    const selectedText = document.getElementById(`block-${id}`);
-    if (selectedText) {
-      selectedText.style.fontSize = fontSize; // Set font size
-    }
-    updateBlock(id, blocks.find((block) => block.id === id).content, blocks.find((block) => block.id === id).color, blocks.find((block) => block.id === id).alignment, fontSize);
+    updateBlock(id, blocks.find(b => b.id === id).content, blocks.find(b => b.id === id).color, blocks.find(b => b.id === id).alignment, fontSize);
   };
 
   const addMCQOption = (blockId) => {
@@ -101,22 +98,17 @@ export default function CustomizeQP() {
     );
   };
 
-  // Preview the question paper in a print-friendly format
   const handlePrint = () => {
     window.print();
   };
 
-  // Download the question paper as a PDF
   const handleDownloadPDF = () => {
     const element = document.getElementById('question-paper');
-    html2pdf()
-      .from(element)
-      .save('customized_question_paper.pdf');
+    html2pdf().from(element).save('customized_question_paper.pdf');
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white">
-      {/* Navbar */}
       <nav className="flex items-center justify-between p-4 border-b border-white/10 bg-white/5 backdrop-blur-md shadow-md">
         <div className="text-xl font-bold text-cyan-300">NextQ</div>
         <div className="space-x-6 hidden md:flex text-gray-200">
@@ -128,68 +120,31 @@ export default function CustomizeQP() {
         <UserCircleIcon className="w-8 h-8 text-cyan-300" />
       </nav>
 
-      {/* Main Editor */}
       <div className="p-6 max-w-4xl mx-auto">
         <h2 className="text-3xl font-semibold text-center text-cyan-300 mb-6">Customized Question Paper</h2>
 
         <div id="question-paper" className="mb-6">
           {blocks.map((block) => (
-            <div
-              key={block.id}
-              className="relative bg-white/10 backdrop-blur-sm p-4 rounded-md mb-6 shadow-md"
-            >
-              {/* Editor Toolbar */}
+            <div key={block.id} className="relative bg-white/10 backdrop-blur-sm p-4 rounded-md mb-6 shadow-md">
               <div className="flex flex-wrap items-center gap-3 mb-3 text-sm">
-                {/* Text Styling Buttons */}
-                <button
-                  className="hover:text-cyan-300 font-bold"
-                  onClick={() => applyStyle(block.id, 'bold')}
-                >
-                  B
-                </button>
-                <button
-                  className="hover:text-cyan-300 italic"
-                  onClick={() => applyStyle(block.id, 'italic')}
-                >
-                  I
-                </button>
-                <button
-                  className="hover:text-cyan-300 underline"
-                  onClick={() => applyStyle(block.id, 'underline')}
-                >
-                  U
-                </button>
-                <button
-                  className="hover:text-cyan-300"
-                  onClick={() => applyStyle(block.id, 'superscript')}
-                >
-                  X<sup>2</sup>
-                </button>
-                <button
-                  className="hover:text-cyan-300"
-                  onClick={() => applyStyle(block.id, 'subscript')}
-                >
-                  X<sub>2</sub>
-                </button>
+                <button onClick={() => applyStyle('bold')} className="hover:text-cyan-300 font-bold">B</button>
+                <button onClick={() => applyStyle('italic')} className="hover:text-cyan-300 italic">I</button>
+                <button onClick={() => applyStyle('underline')} className="hover:text-cyan-300 underline">U</button>
+                <button onClick={() => applyStyle('superscript')} className="hover:text-cyan-300">X<sup>2</sup></button>
+                <button onClick={() => applyStyle('subscript')} className="hover:text-cyan-300">X<sub>2</sub></button>
                 <label className="hover:text-cyan-300 cursor-pointer flex items-center gap-1">
                   <PhotoIcon className="w-4 h-4" />
                   <input type="file" accept="image/*" className="hidden" />
                 </label>
-
-                {/* Color Picker */}
                 <input
                   type="color"
                   value={block.color}
                   onChange={(e) => handleColorChange(block.id, e.target.value)}
                   className="w-6 h-6 border-none bg-transparent"
                 />
-
-                {/* Alignment Buttons */}
                 <button onClick={() => handleAlignment(block.id, 'left')} className="hover:text-cyan-300">Left</button>
                 <button onClick={() => handleAlignment(block.id, 'center')} className="hover:text-cyan-300">Center</button>
                 <button onClick={() => handleAlignment(block.id, 'right')} className="hover:text-cyan-300">Right</button>
-
-                {/* Font Size Dropdown */}
                 <select
                   value={block.fontSize}
                   onChange={(e) => handleFontSizeChange(block.id, e.target.value)}
@@ -201,8 +156,6 @@ export default function CustomizeQP() {
                   <option value="20px">20px</option>
                   <option value="24px">24px</option>
                 </select>
-
-                {/* Add MCQ Option Button */}
                 <button
                   onClick={() => addMCQOption(block.id)}
                   className="hover:text-cyan-300 px-2 py-1 border rounded text-xs"
@@ -211,18 +164,22 @@ export default function CustomizeQP() {
                 </button>
               </div>
 
-              {/* Text Input (ContentEditable) */}
               <div
                 id={`block-${block.id}`}
-                className="w-full p-3 text-black rounded-md min-h-[120px] resize-none border"
+                className="w-full p-3 text-black rounded-md min-h-[120px] resize-none border bg-white"
                 contentEditable
-                style={{ color: block.color, textAlign: block.alignment, fontSize: block.fontSize }}
+                style={{
+                  color: block.color,
+                  textAlign: block.alignment,
+                  fontSize: block.fontSize
+                }}
                 suppressContentEditableWarning={true}
-                onInput={(e) => updateBlock(block.id, e.target.innerHTML, block.color, block.alignment, block.fontSize)}
+                onBlur={(e) =>
+                  updateBlock(block.id, e.target.innerHTML, block.color, block.alignment, block.fontSize)
+                }
                 dangerouslySetInnerHTML={{ __html: block.content }}
               />
 
-              {/* MCQ Options */}
               {block.mcqOptions.length > 0 && (
                 <div className="mt-4">
                   {block.mcqOptions.map((option) => (
@@ -246,7 +203,6 @@ export default function CustomizeQP() {
                 </div>
               )}
 
-              {/* Remove Block Button */}
               <button
                 onClick={() => removeBlock(block.id)}
                 className="absolute top-2 right-2 text-red-500"
@@ -257,7 +213,6 @@ export default function CustomizeQP() {
           ))}
         </div>
 
-        {/* Action Buttons */}
         <div className="flex justify-between">
           <button
             onClick={addBlock}
