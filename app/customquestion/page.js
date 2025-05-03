@@ -38,14 +38,14 @@ export default function CustomizeQP() {
   const applyStyle = (id, style) => {
     const selectedText = document.getElementById(`block-${id}`);
     if (selectedText) {
-      document.execCommand(style, false, null); // Apply the text style (e.g., bold, italic, etc.)
+      document.execCommand(style, false, null); 
     }
   };
 
   const handleAlignment = (id, alignment) => {
     const selectedText = document.getElementById(`block-${id}`);
     if (selectedText) {
-      selectedText.style.textAlign = alignment; // Set alignment style
+      selectedText.style.textAlign = alignment;
     }
     updateBlock(id, blocks.find((block) => block.id === id).content, blocks.find((block) => block.id === id).color, alignment, blocks.find((block) => block.id === id).fontSize);
   };
@@ -219,7 +219,7 @@ export default function CustomizeQP() {
                 style={{ color: block.color, textAlign: block.alignment, fontSize: block.fontSize }}
                 suppressContentEditableWarning={true}
                 onInput={(e) => updateBlock(block.id, e.target.innerHTML, block.color, block.alignment, block.fontSize)}
-                dangerouslySetInnerHTML={{ __html: block.content }}
+               
               />
 
               {/* MCQ Options */}
