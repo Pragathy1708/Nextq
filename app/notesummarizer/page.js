@@ -94,6 +94,7 @@ export default function DocumentSummarizer() {
         {/* Difficulty Level */}
         {fileUploaded && !summary && (
           <div className="mt-8 text-center">
+         <p>File Uploded</p>
             <label className="text-lg font-semibold text-gray-200">Select Difficulty Level</label>
             <div className="flex justify-center gap-6 mt-4">
               {["easy", "medium", "hard"].map((level) => (

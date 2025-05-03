@@ -43,12 +43,21 @@ export default function CustomizeQP() {
     );
   };
 
-  const applyStyle = (command) => {
-    document.execCommand(command, false, null);
+
+  const applyStyle = (id, style) => {
+    const selectedText = document.getElementById(`block-${id}`);
+    if (selectedText) {
+      document.execCommand(style, false, null); 
+    }
   };
 
   const handleAlignment = (id, alignment) => {
-    updateBlock(id, blocks.find(b => b.id === id).content, blocks.find(b => b.id === id).color, alignment, blocks.find(b => b.id === id).fontSize);
+    const selectedText = document.getElementById(`block-${id}`);
+    if (selectedText) {
+      selectedText.style.textAlign = alignment;
+    }
+    updateBlock(id, blocks.find((block) => block.id === id).content, blocks.find((block) => block.id === id).color, alignment, blocks.find((block) => block.id === id).fontSize);
+
   };
 
   const handleFontSizeChange = (id, fontSize) => {
@@ -174,10 +183,10 @@ export default function CustomizeQP() {
                   fontSize: block.fontSize
                 }}
                 suppressContentEditableWarning={true}
-                onBlur={(e) =>
-                  updateBlock(block.id, e.target.innerHTML, block.color, block.alignment, block.fontSize)
-                }
-                dangerouslySetInnerHTML={{ __html: block.content }}
+
+                onInput={(e) => updateBlock(block.id, e.target.innerHTML, block.color, block.alignment, block.fontSize)}
+               
+
               />
 
               {block.mcqOptions.length > 0 && (
